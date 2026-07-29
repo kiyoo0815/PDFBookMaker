@@ -13,7 +13,8 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QFileDialog,
     QTableWidget,
-    QTableWidgetItem
+    QTableWidgetItem,
+    QMessageBox
 )
 
 
@@ -66,6 +67,15 @@ class MainWindow(QWidget):
         output_layout = QHBoxLayout()
         output_layout.addWidget(self.output_edit)
         output_layout.addWidget(self.output_button)
+
+        # ==========================
+        # 책 제목
+        # ==========================
+
+        book_label = QLabel("책 제목")
+
+        self.book_name_edit = QLineEdit()
+        self.book_name_edit.setPlaceholderText("최종 PDF 파일명을 입력하세요.")
 
         # ==========================
         # 진행바
@@ -150,6 +160,9 @@ class MainWindow(QWidget):
 
         layout.addWidget(output_label)
         layout.addLayout(output_layout)
+
+        layout.addWidget(book_label)
+        layout.addWidget(self.book_name_edit)
 
         layout.addWidget(progress_label)
         layout.addWidget(self.progress)
@@ -311,8 +324,49 @@ class MainWindow(QWidget):
         self.log.append("")
         self.log.append("전자책 제작 준비 완료!")
 
-        output_file = "merged.pdf"
+        import os
+
+        book_name = self.book_name_edit.text().strip()
+
+        if not book_name:
+            QMessageBox.warning(
+                self,
+                "알림",
+                "책 제목을 입력해 주세요."
+            )
+            return
+
+        output_folder = self.output_edit.text().strip()
+
+        if not output_folder:
+            QMessageBox.warning(
+                self,
+                "알림",
+                "출력 폴더를 선택해 주세요."
+            )
+            return
+
+        output_file = os.path.join(
+            output_folder,
+            f"{book_name}.pdf"
+        )
+
+        if os.path.exists(output_file):
+
+            reply = QMessageBox.question(
+                self,
+                "파일 확인",
+                "같은 이름의 파일이 이미 있습니다.\n덮어쓰시겠습니까?",
+                QMessageBox.Yes | QMessageBox.No
+            )
+
+            if reply == QMessageBox.No:
+                return
 
         merge_pdf(self.selected_files, output_file)
 
-        self.log.append("PDF 병합 완료!")
+        QMessageBox.information(
+            self,
+            "완료",
+            "전자책이 생성되었습니다."
+)
