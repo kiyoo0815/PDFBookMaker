@@ -112,6 +112,12 @@ class MainWindow(QWidget):
         self.apply_button = QPushButton("적용")
         self.apply_button.clicked.connect(self.apply_title)
 
+        self.up_button = QPushButton("▲ 위로")
+        self.down_button = QPushButton("▼ 아래로")
+
+        self.up_button.clicked.connect(self.move_up)
+        self.down_button.clicked.connect(self.move_down)
+
         # ==========================
         # 로그창
         # ==========================
@@ -156,6 +162,12 @@ class MainWindow(QWidget):
         layout.addWidget(self.book_title_edit)
 
         layout.addWidget(self.apply_button)
+
+        move_layout = QHBoxLayout()
+        move_layout.addWidget(self.up_button)
+        move_layout.addWidget(self.down_button)
+
+        layout.addLayout(move_layout)
 
         layout.addWidget(log_label)
         layout.addWidget(self.log)
@@ -227,6 +239,59 @@ class MainWindow(QWidget):
         title = self.book_title_edit.text()
 
         self.table.item(row, 2).setText(title)
+
+    def move_up(self):
+
+        row = self.table.currentRow()
+
+        # 첫 번째 행이면 이동 불가
+        if row <= 0:
+            return
+
+        # 위 행과 현재 행의 데이터를 서로 교환
+        for col in range(self.table.columnCount()):
+
+            current = self.table.takeItem(row, col)
+            upper = self.table.takeItem(row - 1, col)
+
+            self.table.setItem(row - 1, col, current)
+            self.table.setItem(row, col, upper)
+
+        # 이동한 행 선택 유지
+        self.table.selectRow(row - 1)
+
+        self.update_order()
+
+    def move_down(self):
+
+        row = self.table.currentRow()
+
+        # 마지막 행이면 이동 불가
+        if row >= self.table.rowCount() - 1:
+            return
+
+        # 현재 행과 아래 행 교환
+        for col in range(self.table.columnCount()):
+
+            current = self.table.takeItem(row, col)
+            lower = self.table.takeItem(row + 1, col)
+
+            self.table.setItem(row + 1, col, current)
+            self.table.setItem(row, col, lower)
+
+        # 선택 유지
+        self.table.selectRow(row + 1)
+
+        self.update_order()
+
+    def update_order(self):
+
+        for row in range(self.table.rowCount()):
+
+            item = self.table.item(row, 0)
+
+            if item:
+                item.setText(str(row + 1))
 
     def make_book(self):
 
