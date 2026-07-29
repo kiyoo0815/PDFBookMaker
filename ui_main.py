@@ -1,7 +1,7 @@
 
+from file_merge import merge_pdf
 from PySide6.QtCore import Qt
 from pathlib import Path
-from file_merge import find_pdf_files
 from PySide6.QtWidgets import (
     QWidget,
     QLabel,
@@ -310,3 +310,9 @@ class MainWindow(QWidget):
 
         self.log.append("")
         self.log.append("전자책 제작 준비 완료!")
+
+        output_file = "merged.pdf"
+
+        merge_pdf(self.selected_files, output_file)
+
+        self.log.append("PDF 병합 완료!")

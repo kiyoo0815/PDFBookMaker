@@ -1,10 +1,22 @@
-from pathlib import Path
+import fitz
 
 
-def find_pdf_files(folder):
+def merge_pdf(pdf_list, output_file):
 
-    folder = Path(folder)
+    print("PDF 병합 시작")
 
-    pdf_files = sorted(folder.glob("*.pdf"))
+    # 새 PDF 생성
+    merged = fitz.open()
 
-    return pdf_files
+    # 선택한 PDF를 순서대로 추가
+    for pdf in pdf_list:
+
+        doc = fitz.open(pdf)
+        merged.insert_pdf(doc)
+        doc.close()
+
+    # 저장
+    merged.save(output_file)
+    merged.close()
+
+    print(f"저장 완료 : {output_file}")
