@@ -3,17 +3,15 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QListWidget,
     QStackedWidget,
-    QWidget,
 )
 
-from ui.pages.toc_page import TocPage
 from ui.pages.page_number_page import PageNumberPage
 from ui.pages.cover_page import CoverPage
 from ui.widgets.cover_preview_widget import CoverPreviewWidget
-from ui.widgets.preview_widget import PreviewWidget
 
 
 class SettingsDialog(QDialog):
+
     def __init__(self, parent=None):
         super().__init__(parent)
 
@@ -33,9 +31,6 @@ class SettingsDialog(QDialog):
         self.menu = QListWidget()
         self.menu.setFixedWidth(180)
 
-        # --------------------------
-        # 메뉴 스타일
-        # --------------------------
         self.menu.setStyleSheet("""
         QListWidget{
             background:white;
@@ -66,26 +61,20 @@ class SettingsDialog(QDialog):
         """)
 
         self.menu.addItems([
-            "   📑   목차",
-            "   #    페이지 번호",
             "   🖼   표지",
+            "   #    페이지 번호",
         ])
 
         # ==========================================
-        # 가운데 설정 페이지
+        # 가운데 페이지
         # ==========================================
         self.stack = QStackedWidget()
 
-        # 목차
-        self.stack.addWidget(TocPage())
-
-        # 페이지 번호
-        self.page_number_page = PageNumberPage()
-        self.stack.addWidget(self.page_number_page)
-
-        # 표지
         self.cover_page = CoverPage()
+        self.page_number_page = PageNumberPage()
+
         self.stack.addWidget(self.cover_page)
+        self.stack.addWidget(self.page_number_page)
 
         # ==========================================
         # 오른쪽 미리보기
@@ -96,24 +85,20 @@ class SettingsDialog(QDialog):
             self.update_cover_preview
         )
 
-        # Preview 생성 후 Signal 연결
-        # self.page_number_page.previewChanged.connect(
-        #     self.preview.update_page_number
-        # )
-
         # ==========================================
-        # 레이아웃 배치
+        # 레이아웃
         # ==========================================
         main_layout.addWidget(self.menu)
         main_layout.addWidget(self.stack)
         main_layout.addWidget(self.preview)
 
         # ==========================================
-        # 메뉴 ↔ 페이지 연결
+        # 메뉴 연결
         # ==========================================
-        self.menu.currentRowChanged.connect(self.stack.setCurrentIndex)
+        self.menu.currentRowChanged.connect(
+            self.stack.setCurrentIndex
+        )
 
-        # 첫 화면
         self.menu.setCurrentRow(0)
 
     def get_page_number_settings(self):
@@ -122,35 +107,22 @@ class SettingsDialog(QDialog):
 
         return {
             "same_position": page.same_position.isChecked(),
-
             "even_position": page.even_selector.selected,
             "odd_position": page.odd_selector.selected,
-
             "font_size": page.font_size.value(),
-
             "start_number": page.start_number.value(),
-
             "horizontal_margin": page.h_margin.value(),
             "vertical_margin": page.v_margin.value(),
-
             "use_dash": page.use_dash.isChecked(),
         }
 
     def update_cover_preview(self, data):
 
-        print(data)
+        print(data["title_y"])
 
-        self.preview.set_title(
-            data["title"]
-        )
-
-        self.preview.set_subtitle(
-            data["subtitle"]
-        )
-
-        self.preview.set_items(
-            data["items"]
-        )
+        self.preview.set_title(data["title"])
+        self.preview.set_subtitle(data["subtitle"])
+        self.preview.set_items(data["items"])
 
         self.preview.set_title_style(
             data["title_font"],
@@ -159,6 +131,10 @@ class SettingsDialog(QDialog):
 
         self.preview.set_title_align(
             data["title_align"]
+        )
+
+        self.preview.set_title_y(
+            data["title_y"]
         )
 
         self.preview.set_subtitle_style(
@@ -170,6 +146,10 @@ class SettingsDialog(QDialog):
             data["subtitle_align"]
         )
 
+        self.preview.set_subtitle_y(
+            data["subtitle_y"]
+        )
+
         self.preview.set_info_style(
             data["info_font"],
             data["info_size"]
@@ -177,6 +157,10 @@ class SettingsDialog(QDialog):
 
         self.preview.set_info_align(
             data["info_align"]
+        )
+
+        self.preview.set_info_y(
+            data["info_y"]
         )
 
         self.preview.set_image(

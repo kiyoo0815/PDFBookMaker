@@ -108,6 +108,18 @@ class CoverPage(QWidget):
             self.emit_cover_changed
         )
 
+        layout.addWidget(QLabel("세로 위치"))
+
+        self.title_y = QSpinBox()
+        self.title_y.setRange(0, 800)
+        self.title_y.setValue(165)
+
+        layout.addWidget(self.title_y)
+
+        self.title_y.valueChanged.connect(
+            self.emit_cover_changed
+        )
+
         # --------------------------------------
         # 부제목 페이지
         # --------------------------------------
@@ -151,6 +163,18 @@ class CoverPage(QWidget):
         ])
 
         layout.addWidget(self.subtitle_align)
+
+        layout.addWidget(QLabel("세로 위치"))
+
+        self.subtitle_y = QSpinBox()
+        self.subtitle_y.setRange(0, 800)
+        self.subtitle_y.setValue(270)
+
+        layout.addWidget(self.subtitle_y)
+
+        self.subtitle_y.valueChanged.connect(
+            self.emit_cover_changed
+        )
 
         self.subtitle_align.currentIndexChanged.connect(
             self.emit_cover_changed
@@ -233,6 +257,18 @@ class CoverPage(QWidget):
         layout.addWidget(self.info_align)
 
         self.info_align.currentIndexChanged.connect(
+            self.emit_cover_changed
+        )
+
+        layout.addWidget(QLabel("세로 위치"))
+
+        self.info_y = QSpinBox()
+        self.info_y.setRange(0, 800)
+        self.info_y.setValue(500)
+
+        layout.addWidget(self.info_y)
+
+        self.info_y.valueChanged.connect(
             self.emit_cover_changed
         )
 
@@ -328,6 +364,10 @@ class CoverPage(QWidget):
         self.subtitle_size.valueChanged.connect(self.emit_cover_changed)
         self.info_size.valueChanged.connect(self.emit_cover_changed)
 
+        self.title_y.valueChanged.connect(
+            self.emit_cover_changed
+        )
+
         self.table.itemChanged.connect(self.emit_cover_changed)
 
     # ======================================
@@ -367,11 +407,16 @@ class CoverPage(QWidget):
             "title_size": self.title_size.value(),
             "title_align": self.title_align.currentText(),
 
+            "title_y": self.title_y.value(),
+
+            "subtitle_y": self.subtitle_y.value(),
+
             "subtitle_font": self.subtitle_font.currentText(),
             "subtitle_size": self.subtitle_size.value(),
 
             "info_font": self.info_font.currentText(),
             "info_size": self.info_size.value(),
+            "info_y": self.info_y.value(),
 
             "items": items,
 

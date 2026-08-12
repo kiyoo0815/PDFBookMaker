@@ -137,7 +137,7 @@ def create_cover_page(page, cover_settings):
     draw_text(
         page,
         cover_settings["title"],
-        220,
+        cover_settings.get("title_y", 220),
         "malgun",
         cover_settings["title_size"],
         align
@@ -150,7 +150,7 @@ def create_cover_page(page, cover_settings):
     draw_text(
         page,
         cover_settings["subtitle"],
-        270,
+        cover_settings.get("subtitle_y", 270),
         "malgun",
         cover_settings["subtitle_size"],
         align
@@ -159,32 +159,27 @@ def create_cover_page(page, cover_settings):
     # -------------------------
     # 하단 정보 출력
     # -------------------------
-    y = 500
+
+    info_align = get_align_value(
+        cover_settings.get("info_align", "왼쪽")
+    )
+
+    y = cover_settings.get("info_y", 500)
 
     for item in cover_settings["items"]:
 
         text = f'{item["label"]} : {item["value"]}'
 
-        info_align = get_align_value(
-            cover_settings.get("info_align", "왼쪽")
+        draw_text(
+            page,
+            text,
+            y,
+            "malgun",
+            cover_settings["info_size"],
+            info_align
         )
 
-        y = 500
-
-        for item in cover_settings["items"]:
-
-            text = f'{item["label"]} : {item["value"]}'
-
-            draw_text(
-                page,
-                text,
-                y,
-                "malgun",
-                cover_settings["info_size"],
-                info_align
-            )
-
-            y += 28
+        y += 28
 
 def shorten_toc_title(title, font, max_width):
     """긴 목차 제목을 줄임표가 붙은 한 줄로 줄인다."""

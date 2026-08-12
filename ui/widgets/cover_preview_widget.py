@@ -14,6 +14,10 @@ class CoverPreviewWidget(QFrame):
         self.subtitle_align = "가운데"
         self.info_align = "왼쪽"
 
+        self.title_y = 165
+        self.subtitle_y = 205
+        self.info_y = 340
+
         self.setStyleSheet("""
             background:white;
             border:1px solid #cccccc;
@@ -62,6 +66,12 @@ class CoverPreviewWidget(QFrame):
     def set_subtitle(self, text):
 
         self.subtitle = text
+
+        self.update()
+
+    def set_subtitle_y(self, y):
+
+        self.subtitle_y = y
 
         self.update()
 
@@ -122,6 +132,12 @@ class CoverPreviewWidget(QFrame):
 
         self.update()
 
+    def set_title_y(self, y):
+
+        self.title_y = y
+
+        self.update()
+
 
     def set_subtitle_style(self, font, size):
 
@@ -148,6 +164,12 @@ class CoverPreviewWidget(QFrame):
     def set_info_align(self, align):
 
         self.info_align = align
+
+        self.update()
+
+    def set_info_y(self, y):
+
+        self.info_y = y
 
         self.update()
 
@@ -245,7 +267,7 @@ class CoverPreviewWidget(QFrame):
 
         painter.drawText(
             20,
-            165,
+            self.title_y,
             self.width() - 40,
             40,
             align,
@@ -301,7 +323,7 @@ class CoverPreviewWidget(QFrame):
         else:
             flags = Qt.AlignHCenter | Qt.AlignVCenter
 
-        y = 340
+        y = self.info_y
 
         for label, value in self.items:
 
