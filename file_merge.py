@@ -179,7 +179,7 @@ def create_cover_page(page, cover_settings):
             info_align
         )
 
-        y += 28
+        y += cover_settings.get("info_spacing", 28)
 
 def shorten_toc_title(title, font, max_width):
     """긴 목차 제목을 줄임표가 붙은 한 줄로 줄인다."""

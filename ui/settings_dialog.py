@@ -163,6 +163,10 @@ class SettingsDialog(QDialog):
             data["info_y"]
         )
 
+        self.preview.set_info_spacing(
+            data["info_spacing"]
+        )
+
         self.preview.set_image(
             data["image_path"],
             data["image_size"]

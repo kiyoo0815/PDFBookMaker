@@ -272,6 +272,19 @@ class CoverPage(QWidget):
             self.emit_cover_changed
         )
 
+        
+        layout.addWidget(QLabel("줄 간격"))
+
+        self.info_spacing = QSpinBox()
+        self.info_spacing.setRange(10, 80)
+        self.info_spacing.setValue(28)
+
+        layout.addWidget(self.info_spacing)
+
+        self.info_spacing.valueChanged.connect(
+            self.emit_cover_changed
+        )
+
         # ======================================
         # 그림 페이지
         # ======================================
@@ -417,6 +430,7 @@ class CoverPage(QWidget):
             "info_font": self.info_font.currentText(),
             "info_size": self.info_size.value(),
             "info_y": self.info_y.value(),
+            "info_spacing": self.info_spacing.value(),
 
             "items": items,
 

@@ -17,6 +17,7 @@ class CoverPreviewWidget(QFrame):
         self.title_y = 165
         self.subtitle_y = 205
         self.info_y = 340
+        self.info_spacing = 28
 
         self.setStyleSheet("""
             background:white;
@@ -170,6 +171,12 @@ class CoverPreviewWidget(QFrame):
     def set_info_y(self, y):
 
         self.info_y = y
+
+        self.update()
+
+    def set_info_spacing(self, spacing):
+
+        self.info_spacing = spacing
 
         self.update()
 
@@ -336,4 +343,4 @@ class CoverPreviewWidget(QFrame):
                 f"{label} : {value}"
             )
 
-            y += 28
+            y += self.info_spacing
