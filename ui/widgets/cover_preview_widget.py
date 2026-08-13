@@ -1,9 +1,11 @@
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QPainter, QFont, QColor, QPixmap
 from PySide6.QtWidgets import QFrame
 
 
 class CoverPreviewWidget(QFrame):
+
+    positionChanged = Signal(str, int)
 
     def __init__(self):
         super().__init__()
@@ -56,6 +58,13 @@ class CoverPreviewWidget(QFrame):
         self.image_mode = "logo"
         self.image_align = "center"
         self.image_y = 80
+
+        # -------------------------
+        # 드래그 관련
+        # -------------------------
+        self.dragging = False
+        self.drag_target = None
+        self.drag_offset = 0
 
 
     def set_title(self, text):
@@ -302,7 +311,7 @@ class CoverPreviewWidget(QFrame):
 
         painter.drawText(
             20,
-            205,
+            self.subtitle_y,
             self.width() - 40,
             30,
             align,
@@ -344,3 +353,72 @@ class CoverPreviewWidget(QFrame):
             )
 
             y += self.info_spacing
+
+    def mousePressEvent(self, event):
+
+        # 제목 영역을 클릭했는지 확인
+        title_top = self.title_y
+        title_bottom = self.title_y + 40
+
+        if title_top <= event.position().y() <= title_bottom:
+
+            self.dragging = True
+            self.drag_target = "title"
+
+            self.drag_offset = (
+                event.position().y()
+                - self.title_y
+            )
+
+        # 부제목 영역을 클릭했는지 확인
+        subtitle_top = self.subtitle_y
+        subtitle_bottom = self.subtitle_y + 30
+
+        if subtitle_top <= event.position().y() <= subtitle_bottom:
+
+            self.dragging = True
+            self.drag_target = "subtitle"
+
+            self.drag_offset = (
+                event.position().y()
+                - self.subtitle_y
+            )
+
+        super().mousePressEvent(event)
+
+    def mouseMoveEvent(self, event):
+
+        if self.dragging and self.drag_target == "title":
+
+            self.title_y = int(
+                event.position().y() - self.drag_offset
+            )
+
+            self.update()
+
+            self.positionChanged.emit(
+                "title",
+                self.title_y
+            )
+
+        elif self.dragging and self.drag_target == "subtitle":
+
+            self.subtitle_y = int(
+                event.position().y() - self.drag_offset
+            )
+
+            self.update()
+
+            self.positionChanged.emit(
+                "subtitle",
+                self.subtitle_y
+            )
+
+        super().mouseMoveEvent(event)
+
+    def mouseReleaseEvent(self, event):
+
+        self.dragging = False
+        self.drag_target = None
+
+        super().mouseReleaseEvent(event)

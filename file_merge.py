@@ -244,10 +244,10 @@ def create_toc_pages(
 
             draw_text(
                 page,
-                "목차",
+                "목 차",
                 TOC_TITLE_Y,
                 "malgun",
-                22
+                28
             )
 
         first = toc_page_index * TOC_ENTRIES_PER_PAGE

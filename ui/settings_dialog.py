@@ -85,6 +85,10 @@ class SettingsDialog(QDialog):
             self.update_cover_preview
         )
 
+        self.preview.positionChanged.connect(
+            self.update_preview_position
+        )
+
         # ==========================================
         # 레이아웃
         # ==========================================
@@ -182,3 +186,13 @@ class SettingsDialog(QDialog):
 
     def get_cover_settings(self):
         return self.cover_page.get_cover_settings()
+
+    def update_preview_position(self, target, value):
+
+        if target == "title":
+
+            self.cover_page.title_y.setValue(value)
+
+        elif target == "subtitle":
+
+            self.cover_page.subtitle_y.setValue(value)
