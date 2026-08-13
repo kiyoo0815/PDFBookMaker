@@ -8,6 +8,7 @@ from PySide6.QtWidgets import (
 from ui.pages.page_number_page import PageNumberPage
 from ui.pages.cover_page import CoverPage
 from ui.widgets.cover_preview_widget import CoverPreviewWidget
+from ui.widgets.page_number_preview_widget import PageNumberPreviewWidget
 
 
 class SettingsDialog(QDialog):
@@ -79,14 +80,30 @@ class SettingsDialog(QDialog):
         # ==========================================
         # 오른쪽 미리보기
         # ==========================================
+        self.preview_stack = QStackedWidget()
+
+        # 표지 미리보기
         self.preview = CoverPreviewWidget()
 
+        # 페이지 번호 미리보기
+        self.page_number_preview = PageNumberPreviewWidget()
+
+        self.preview_stack.addWidget(self.preview)
+        self.preview_stack.addWidget(self.page_number_preview)
+
+        # 표지 설정 → 표지 미리보기
         self.cover_page.coverChanged.connect(
             self.update_cover_preview
         )
 
+        # 표지 드래그 → 설정값
         self.preview.positionChanged.connect(
             self.update_preview_position
+        )
+
+        # 페이지 번호 설정 → 페이지 번호 미리보기
+        self.page_number_page.previewChanged.connect(
+            self.page_number_preview.set_settings
         )
 
         # ==========================================
@@ -94,13 +111,17 @@ class SettingsDialog(QDialog):
         # ==========================================
         main_layout.addWidget(self.menu)
         main_layout.addWidget(self.stack)
-        main_layout.addWidget(self.preview)
+        main_layout.addWidget(self.preview_stack)
 
         # ==========================================
         # 메뉴 연결
         # ==========================================
         self.menu.currentRowChanged.connect(
             self.stack.setCurrentIndex
+        )
+
+        self.menu.currentRowChanged.connect(
+            self.preview_stack.setCurrentIndex
         )
 
         self.menu.setCurrentRow(0)
@@ -196,3 +217,17 @@ class SettingsDialog(QDialog):
         elif target == "subtitle":
 
             self.cover_page.subtitle_y.setValue(value)
+
+        elif target == "info":
+
+            self.cover_page.info_y.setValue(value)
+
+        elif target == "image":
+            self.cover_page.image_y.setValue(value)
+
+    def set_preview_pdf(self, pdf_path):
+        """페이지 번호 미리보기에 사용할 PDF 전달"""
+
+        self.page_number_preview.set_pdf(
+            pdf_path
+        )

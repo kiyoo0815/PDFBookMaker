@@ -12,7 +12,6 @@ from PySide6.QtWidgets import (
     QPushButton,
     QComboBox,
     QSpinBox,
-    QSlider,
     QFileDialog,
 )
 
@@ -291,59 +290,57 @@ class CoverPage(QWidget):
         image_page = QWidget()
         layout = QVBoxLayout(image_page)
 
+        # 그림 파일
         layout.addWidget(QLabel("그림"))
 
         self.image_path = QLineEdit()
         self.image_path.setReadOnly(True)
-
         layout.addWidget(self.image_path)
 
         self.image_button = QPushButton("그림 선택")
+        layout.addWidget(self.image_button)
+
+        # 크기
         layout.addWidget(QLabel("크기 (%)"))
 
-        # -----------------------------
-        # 그림 정렬
-        # -----------------------------
+        self.image_size = QSpinBox()
+        self.image_size.setRange(10, 300)
+        self.image_size.setValue(100)
+        layout.addWidget(self.image_size)
+
+        # 정렬
         layout.addWidget(QLabel("정렬"))
 
         self.image_align = QComboBox()
-
         self.image_align.addItems([
             "가운데",
             "왼쪽",
             "오른쪽",
         ])
-
         layout.addWidget(self.image_align)
 
-        layout.addWidget(QLabel("위치"))
+        # 세로 위치
+        layout.addWidget(QLabel("세로 위치"))
 
-        self.image_y_slider = QSlider(Qt.Horizontal)
+        self.image_y = QSpinBox()
+        self.image_y.setRange(0, 800)
+        self.image_y.setValue(80)
+        layout.addWidget(self.image_y)
 
-        self.image_y_slider.setRange(0, 250)
-        self.image_y_slider.setValue(20)
-
-        layout.addWidget(self.image_y_slider)
-
-        self.image_size = QSpinBox()
-        self.image_size.setRange(10, 300)
-        self.image_size.setValue(100)
-
-        layout.addWidget(self.image_size)
-        layout.addWidget(self.image_button)
-        self.image_size.valueChanged.connect(
-            self.emit_cover_changed
-        )
-
+        # Signal
         self.image_button.clicked.connect(
             self.select_image
         )
 
-        self.image_y_slider.valueChanged.connect(
+        self.image_size.valueChanged.connect(
             self.emit_cover_changed
         )
 
         self.image_align.currentIndexChanged.connect(
+            self.emit_cover_changed
+        )
+
+        self.image_y.valueChanged.connect(
             self.emit_cover_changed
         )
 
@@ -436,7 +433,7 @@ class CoverPage(QWidget):
 
             "image_path": self.image_path.text(),
             "image_size": self.image_size.value(),
-            "image_y": self.image_y_slider.value(),
+            "image_y": self.image_y.value(),
             "image_align": self.image_align.currentText(),            
 
             "subtitle_align": self.subtitle_align.currentText(),

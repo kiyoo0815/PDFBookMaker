@@ -384,6 +384,70 @@ class CoverPreviewWidget(QFrame):
                 - self.subtitle_y
             )
 
+        # 하단 정보 영역을 클릭했는지 확인
+        if self.items:
+
+            info_top = self.info_y
+            info_bottom = (
+                self.info_y
+                + (len(self.items) - 1) * self.info_spacing
+                + 30
+            )
+
+            if info_top <= event.position().y() <= info_bottom:
+
+                self.dragging = True
+                self.drag_target = "info"
+
+                self.drag_offset = (
+                    event.position().y()
+                    - self.info_y
+                )
+
+        # 그림 영역을 클릭했는지 확인
+        if self.image and not self.image.isNull():
+
+            if self.image_mode == "logo":
+
+                base = 120
+                size = int(base * self.image_size / 100)
+
+                pix = self.image.scaled(
+                    size,
+                    size,
+                    Qt.KeepAspectRatio,
+                    Qt.SmoothTransformation
+                )
+
+                margin = 20
+
+                if self.image_align == "왼쪽":
+                    image_x = margin
+
+                elif self.image_align == "가운데":
+                    image_x = (self.width() - pix.width()) // 2
+
+                elif self.image_align == "오른쪽":
+                    image_x = self.width() - pix.width() - margin
+
+                else:
+                    image_x = (self.width() - pix.width()) // 2
+
+                mouse_x = event.position().x()
+                mouse_y = event.position().y()
+
+                if (
+                    image_x <= mouse_x <= image_x + pix.width()
+                    and
+                    self.image_y <= mouse_y <= self.image_y + pix.height()
+                ):
+                    self.dragging = True
+                    self.drag_target = "image"
+
+                    self.drag_offset = (
+                        mouse_y - self.image_y
+                    )
+
         super().mousePressEvent(event)
 
     def mouseMoveEvent(self, event):
@@ -412,6 +476,32 @@ class CoverPreviewWidget(QFrame):
             self.positionChanged.emit(
                 "subtitle",
                 self.subtitle_y
+            )
+
+        elif self.dragging and self.drag_target == "info":
+
+            self.info_y = int(
+                event.position().y() - self.drag_offset
+            )
+
+            self.update()
+
+            self.positionChanged.emit(
+                "info",
+                self.info_y
+            )
+
+        elif self.dragging and self.drag_target == "image":
+
+            self.image_y = int(
+                event.position().y() - self.drag_offset
+            )
+
+            self.update()
+
+            self.positionChanged.emit(
+                "image",
+                self.image_y
             )
 
         super().mouseMoveEvent(event)

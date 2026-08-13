@@ -502,6 +502,18 @@ class MainWindow(QWidget):
 
     def open_settings_dialog(self):
 
+        # 병합 순서 기준 첫 번째 PDF를 가져온다.
+        try:
+            ordered_files = self.get_ordered_pdf_files()
+        except ValueError:
+            ordered_files = []
+
+        # PDF가 선택되어 있으면 첫 번째 PDF를 미리보기에 전달
+        if ordered_files:
+            self.settings_dialog.set_preview_pdf(
+                ordered_files[0]
+            )
+
         self.settings_dialog.exec()
 
     def select_input_files(self):

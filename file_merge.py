@@ -37,6 +37,10 @@ PAGE_NUMBER_SIZE = 10
 PAGE_NUMBER_MARGIN = 20
 PAGE_NUMBER_POSITION = "center"   # left / center / right
 
+def mm_to_pt(mm):
+    """밀리미터(mm)를 PDF 포인트(pt)로 변환"""
+    return mm * 72 / 25.4
+
 def draw_text(page, text, y, fontname, fontsize, align=1):
     """
     텍스트 출력
@@ -376,8 +380,13 @@ def add_page_number(
     # 대략적인 글자 폭 계산
     text_width = len(text) * fontsize * 0.55
 
-    h_margin = page_number_settings["horizontal_margin"]
-    v_margin = page_number_settings["vertical_margin"]
+    h_margin = mm_to_pt(
+        page_number_settings["horizontal_margin"]
+    )
+
+    v_margin = mm_to_pt(
+        page_number_settings["vertical_margin"]
+    )
 
     # 사용할 위치 결정
     if page_number_settings["same_position"]:
