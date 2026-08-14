@@ -70,16 +70,6 @@ class CoverPage(QWidget):
         self.title_edit = QLineEdit()
         layout.addWidget(self.title_edit)
 
-        layout.addWidget(QLabel("글꼴"))
-
-        self.title_font = QComboBox()
-        self.title_font.addItems([
-            "맑은 고딕",
-            "나눔고딕",
-            "나눔명조",
-        ])
-        layout.addWidget(self.title_font)
-
         layout.addWidget(QLabel("글자 크기"))
 
         self.title_size = QSpinBox()
@@ -129,16 +119,6 @@ class CoverPage(QWidget):
 
         self.subtitle_edit = QLineEdit()
         layout.addWidget(self.subtitle_edit)
-
-        layout.addWidget(QLabel("글꼴"))
-
-        self.subtitle_font = QComboBox()
-        self.subtitle_font.addItems([
-            "맑은 고딕",
-            "나눔고딕",
-            "나눔명조",
-        ])
-        layout.addWidget(self.subtitle_font)
 
         layout.addWidget(QLabel("글자 크기"))
 
@@ -221,16 +201,6 @@ class CoverPage(QWidget):
         button_layout.addWidget(self.delete_button)
 
         layout.addLayout(button_layout)
-
-        layout.addWidget(QLabel("글꼴"))
-
-        self.info_font = QComboBox()
-        self.info_font.addItems([
-            "맑은 고딕",
-            "나눔고딕",
-            "나눔명조",
-        ])
-        layout.addWidget(self.info_font)
 
         layout.addWidget(QLabel("글자 크기"))
 
@@ -366,10 +336,6 @@ class CoverPage(QWidget):
         self.title_edit.textChanged.connect(self.emit_cover_changed)
         self.subtitle_edit.textChanged.connect(self.emit_cover_changed)
 
-        self.title_font.currentTextChanged.connect(self.emit_cover_changed)
-        self.subtitle_font.currentTextChanged.connect(self.emit_cover_changed)
-        self.info_font.currentTextChanged.connect(self.emit_cover_changed)
-
         self.title_size.valueChanged.connect(self.emit_cover_changed)
         self.subtitle_size.valueChanged.connect(self.emit_cover_changed)
         self.info_size.valueChanged.connect(self.emit_cover_changed)
@@ -413,7 +379,7 @@ class CoverPage(QWidget):
             "title": self.title_edit.text(),
             "subtitle": self.subtitle_edit.text(),
 
-            "title_font": self.title_font.currentText(),
+            "title_font": "맑은 고딕",
             "title_size": self.title_size.value(),
             "title_align": self.title_align.currentText(),
 
@@ -421,10 +387,10 @@ class CoverPage(QWidget):
 
             "subtitle_y": self.subtitle_y.value(),
 
-            "subtitle_font": self.subtitle_font.currentText(),
+            "subtitle_font": "맑은 고딕",
             "subtitle_size": self.subtitle_size.value(),
 
-            "info_font": self.info_font.currentText(),
+            "info_font": "맑은 고딕",
             "info_size": self.info_size.value(),
             "info_y": self.info_y.value(),
             "info_spacing": self.info_spacing.value(),

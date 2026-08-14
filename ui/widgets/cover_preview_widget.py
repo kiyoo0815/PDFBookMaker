@@ -343,6 +343,15 @@ class CoverPreviewWidget(QFrame):
 
         for label, value in self.items:
 
+            label = label.strip()
+            value = value.strip()
+
+            # 항목과 내용이 모두 비어 있으면
+            # 아무것도 그리지 않고 빈 줄로 사용
+            if not label and not value:
+                y += self.info_spacing
+                continue
+
             painter.drawText(
                 20,
                 y,

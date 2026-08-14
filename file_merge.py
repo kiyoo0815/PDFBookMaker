@@ -172,7 +172,16 @@ def create_cover_page(page, cover_settings):
 
     for item in cover_settings["items"]:
 
-        text = f'{item["label"]} : {item["value"]}'
+        label = item["label"].strip()
+        value = item["value"].strip()
+
+        # 양쪽이 모두 비어 있으면
+        # 아무것도 출력하지 않고 빈 줄로 사용
+        if not label and not value:
+            y += cover_settings.get("info_spacing", 28)
+            continue
+
+        text = f"{label} : {value}"
 
         draw_text(
             page,
