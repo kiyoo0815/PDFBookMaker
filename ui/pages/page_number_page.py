@@ -151,8 +151,6 @@ class PageNumberPage(QWidget):
 
     def even_position_changed(self, position):
 
-        print(f"짝수 페이지 : {position}")
-
         if self.same_position.isChecked():
             self.odd_selector.set_selected(
                 position,
@@ -163,8 +161,6 @@ class PageNumberPage(QWidget):
 
     def odd_position_changed(self, position):
 
-        print(f"홀수 페이지 : {position}")
-
         if self.same_position.isChecked():
             self.even_selector.set_selected(
                 position,
@@ -174,8 +170,6 @@ class PageNumberPage(QWidget):
         self.update_preview()
 
     def same_position_changed(self, checked):
-
-        print(f"동일 적용 : {checked}")
 
         if checked:
             # 체크하는 순간 짝수 페이지 위치를 홀수 페이지에 복사

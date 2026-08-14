@@ -372,8 +372,6 @@ class CoverPage(QWidget):
                 "value": value,
             })
 
-        print("subtitle =", self.subtitle_align.currentText())
-
         return {
 
             "title": self.title_edit.text(),

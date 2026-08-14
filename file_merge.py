@@ -50,13 +50,11 @@ def draw_text(page, text, y, fontname, fontsize, align=1):
         1 : 가운데
         2 : 오른쪽
     """
-    print(f"text={text}, align={align}")
-
     rect = fitz.Rect(
         LEFT_RIGHT_MARGIN,
         y,
         page.rect.width - LEFT_RIGHT_MARGIN,
-        y + 50
+        y + 100
     )
 
     page.insert_textbox(
@@ -88,9 +86,6 @@ def create_cover_page(page, cover_settings):
         fontname="malgun",
         fontfile=font_path
     )
-
-    print("===== COVER SETTINGS =====")
-    print(cover_settings)
 
     # -------------------------
     # 그림 출력
@@ -134,6 +129,7 @@ def create_cover_page(page, cover_settings):
         )
 
     # 제목 출력
+        
     align = get_align_value(
         cover_settings.get("title_align", "가운데")
     )
@@ -374,8 +370,6 @@ def add_page_number(
     page_number_settings,
     pdf_page_index
 ):
-
-    print(page_number_settings)
     
     """페이지 번호 출력"""
 
@@ -401,7 +395,7 @@ def add_page_number(
     if page_number_settings["same_position"]:
         position = page_number_settings["odd_position"]
     else:
-        if pdf_page_index % 2 == 0:
+        if page_no % 2 == 0:
             position = page_number_settings["even_position"]
         else:
             position = page_number_settings["odd_position"]
@@ -626,7 +620,6 @@ def merge_pdf(
 ):
     """표지, 목차, 본문과 북마크를 하나의 PDF로 만든다."""
 
-    print("PDF 병합 시작")
     report_log(log_callback, "PDF 병합을 시작합니다.")
     report_progress(progress_callback, 0)
 
@@ -712,4 +705,4 @@ def merge_pdf(
 
     report_progress(progress_callback, 100)
     report_log(log_callback, "PDF 병합이 완료되었습니다.")
-    print("PDF 병합 완료")
+

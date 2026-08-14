@@ -167,8 +167,6 @@ class SettingsDialog(QDialog):
 
     def update_cover_preview(self, data):
 
-        print(data["title_y"])
-
         self.preview.set_title(data["title"])
         self.preview.set_subtitle(data["subtitle"])
         self.preview.set_items(data["items"])

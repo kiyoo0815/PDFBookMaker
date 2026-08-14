@@ -82,11 +82,6 @@ class PositionSelector(QWidget):
         click_x = event.position().x()
         click_y = event.position().y()
 
-        print("클릭됨")   # ← 추가
-
-        click_x = event.position().x()
-        click_y = event.position().y()
-
         for i, (x, y) in enumerate(self.points):
 
             # 버튼 크기(14×14)

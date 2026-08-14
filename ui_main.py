@@ -517,7 +517,6 @@ class MainWindow(QWidget):
         self.settings_dialog.exec()
 
     def select_input_files(self):
-        print("select_input_files() 호출됨")
 
         files, _ = QFileDialog.getOpenFileNames(
             self,
@@ -713,7 +712,11 @@ class MainWindow(QWidget):
 
         # 파일을 선택하지 않은 경우
         if not hasattr(self, "selected_files") or not self.selected_files:
-            self.log.append("PDF 파일을 먼저 선택하세요.")
+            QMessageBox.warning(
+                self,
+                "알림",
+                "PDF 파일을 먼저 선택해 주세요."
+            )
             return
 
         try:
@@ -805,9 +808,6 @@ class MainWindow(QWidget):
                     "path": file_item.data(Qt.UserRole),
                     "title": title_item.text()
                 })
-
-        print("=" * 50)
-        print(toc_items)
 
         self.progress.setValue(0)
         self.make_button.setEnabled(False)

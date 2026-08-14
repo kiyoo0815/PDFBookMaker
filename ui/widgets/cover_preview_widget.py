@@ -200,9 +200,7 @@ class CoverPreviewWidget(QFrame):
         # -------------------------
         # 그림
         # -------------------------
-
-        print("paintEvent :", self.image_align)
-        
+       
         if self.image and not self.image.isNull():
 
             painter.setOpacity(0.25)
