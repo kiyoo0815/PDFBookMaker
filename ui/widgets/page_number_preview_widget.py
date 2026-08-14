@@ -137,8 +137,12 @@ class PageNumberPreviewWidget(QFrame):
         # -------------------------
         if self.pdf_preview:
 
+            preview_width = int(self.width() * 0.90)
+            preview_height = int(self.height() * 0.90)
+
             scaled = self.pdf_preview.scaled(
-                self.size(),
+                preview_width,
+                preview_height,
                 Qt.KeepAspectRatio,
                 Qt.SmoothTransformation
             )

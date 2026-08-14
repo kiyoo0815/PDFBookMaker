@@ -77,7 +77,7 @@ class MainWindow(QWidget):
         background:transparent;
         """)
 
-        version = QLabel("v1.1")
+        version = QLabel("v1.0 RC")
         version.setStyleSheet("""
         color:#9ca3af;
         font-size:9pt;

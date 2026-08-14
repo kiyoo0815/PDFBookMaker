@@ -361,6 +361,8 @@ class CoverPreviewWidget(QFrame):
 
             y += self.info_spacing
 
+        painter.end()
+
     def mousePressEvent(self, event):
 
         # 제목 영역을 클릭했는지 확인
