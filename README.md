@@ -43,8 +43,6 @@
 
 ## 실행 환경
 
-## 실행 환경
-
 - Windows 10 또는 Windows 11
 - Python 3.10 이상
 
@@ -56,8 +54,6 @@ python -m venv .venv
 python -m pip install -r requirements.txt
 python main.py
 ```
-
-## 사용 방법
 
 ## 사용 방법
 
