@@ -86,7 +86,7 @@ class MainWindow(QWidget):
 
         header_left = QVBoxLayout()
         header_left.setSpacing(2)
-        header_left.addWidget(header)
+        header_left.addWidget(header)git self.statusTip
         header_left.addWidget(sub_title)
 
         header_layout = QHBoxLayout()

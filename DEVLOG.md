@@ -144,6 +144,41 @@ OK
 - `04_result.png` : 최종 PDF 결과
 - README.md에서 스크린샷 4장 정상 표시 확인
 
+### 사용자 매뉴얼
+
+- USER_MANUAL.md 작성 완료
+- 프로그램 기본 사용 방법 정리
+- PDF 파일 선택 및 순서 변경 방법 정리
+- 북마크 제목 편집 방법 정리
+- 표지 설정 방법 정리
+- 페이지 번호 설정 방법 정리
+- 전자책 생성 방법 정리
+- README.md에 사용자 매뉴얼 안내 추가
+
+### Windows EXE 제작
+
+- PyInstaller를 이용한 Windows EXE 제작
+- `onedir` 방식으로 배포 구조 확정
+- EXE 실행 테스트 완료
+- EXE에서 실제 전자책 생성 테스트 완료
+- 최초 EXE 테스트에서 `malgun.ttf` 누락 문제 발견
+- PyInstaller 빌드에 `assets` 폴더 포함 처리
+- `malgun.ttf` 포함 후 재빌드 성공
+- `PDFBookMaker.spec`에 `assets` 포함 설정 확인
+- 프로젝트 폴더 외부에서 EXE 실행 테스트 완료
+- 프로젝트 폴더 외부에서 실제 전자책 생성 테스트 완료
+- 표지 / 목차 / 북마크 / 페이지 번호 / 한글 출력 정상 확인
+
+### 배포
+
+- Windows 배포 방식을 `onedir + ZIP` 방식으로 확정
+- 배포용 ZIP 파일 생성
+  - `PDFBookMaker-v1.0-RC-Windows.zip`
+- ZIP 압축 해제 후 독립 실행 테스트 완료
+- GitHub 태그 `v1.0-rc1` 생성
+- `PDF Book Maker v1.0 RC1` Pre-release 게시
+- Windows 배포용 ZIP 파일 GitHub Release에 등록 완료
+
 ### Git
 
 - Commit / Push 완료
@@ -198,6 +233,8 @@ OK
 
 - README.md
 - DEVLOG.md
+- USER_MANUAL.md
+- PDFBookMaker.spec
 - ui/widgets/cover_preview_widget.py
 - ui/widgets/page_number_preview_widget.py
 - ui/pages/cover_page.py
@@ -251,19 +288,24 @@ OK
 - [x] 예외 처리
 - [x] 자동 테스트
 - [x] 실제 전자책 생성 테스트
+- [x] Windows EXE 실행 테스트
+- [x] 배포용 ZIP 독립 실행 테스트
 
 ### 문서
 
 - [x] README.md 작성
 - [x] 스크린샷 제작
-- [ ] 사용자 매뉴얼 작성
+- [x] 사용자 매뉴얼 작성
 
 ### 배포
 
-- [ ] EXE 제작
-- [ ] Windows 환경에서 EXE 실행 확인
-- [ ] 깨끗한 Windows 환경에서 EXE 실행 확인
+- [x] EXE 제작
+- [x] Windows 환경에서 EXE 실행 확인
+- [x] 배포용 ZIP 제작
+- [x] GitHub v1.0 RC1 Pre-release
+- [ ] 다른 Windows PC에서 실행 확인
 - [ ] 프로젝트 라이선스 결정 및 LICENSE 파일 추가
+- [ ] v1.0 정식 릴리스
 
 ---
 
@@ -310,11 +352,8 @@ OK
 
 # 다음 작업
 
-1. DEVLOG.md 최종 정리
-2. 현재 변경사항 Git Commit / Push
-3. 사용자 매뉴얼 작성
-4. EXE 제작
-5. Windows에서 EXE 실행 테스트
-6. 깨끗한 Windows 환경에서 EXE 실행 확인
-7. LICENSE 결정
-8. v1.0 정식 릴리스
+1. v1.0 RC1 실사용 테스트
+2. 다른 Windows PC에서 배포본 실행 확인
+3. 발견된 버그 수정
+4. LICENSE 결정 및 추가
+5. v1.0 정식 릴리스
