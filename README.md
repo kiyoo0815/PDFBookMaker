@@ -43,8 +43,8 @@
 
 ## 실행 환경
 
-- Windows 10 또는 Windows 11
-- Python 3.10 이상
+- 일반 사용자: Windows 10/11, Python 설치 불필요
+- 개발자: Python 3.10 이상
 
 ## 개발 환경 실행
 
@@ -67,11 +67,9 @@ python main.py
 8. 설정을 완료한 뒤 메인 화면에서 `전자책 만들기`를 누릅니다.
 9. 병합이 완료되면 지정한 출력 폴더에서 완성된 PDF를 확인합니다.
 
-목차와 북마크에는 메인 화면에 표시된 PDF의 순서와 전자책 제목이 사용됩니다.
+목차와 북마크에는 메인 화면에 표시된 PDF의 순서와 제목이 사용됩니다.
 
 표지와 페이지 번호 설정은 자동으로 저장되며 프로그램을 다시 실행하면 마지막으로 사용한 설정이 복원됩니다.
-
-목차와 북마크에는 화면에 표시된 PDF 순서와 제목이 사용됩니다.
 
 ## 테스트
 
@@ -79,16 +77,25 @@ python main.py
 python -m unittest discover -s tests -v
 ```
 
-테스트는 다중 목차, 북마크, 병합 순서, 진행률, 로그와 누락 파일 오류를 확인합니다.
+테스트에서는 다음 주요 기능을 확인합니다.
+
+1. 입력 파일 누락 시 오류 처리
+2. 여러 페이지로 구성되는 목차 생성
+3. PDF 병합 순서
+4. 북마크 생성
+5. 진행률 및 단계별 로그 처리
 
 ## Windows 실행파일 만들기
 
+개발 환경에서 다음 명령으로 Windows 실행파일을 만들 수 있습니다.
 ```powershell
 python -m pip install -r requirements-dev.txt
-pyinstaller --noconfirm --clean pdf_book_maker.spec
+pyinstaller --noconfirm --clean PDFBookMaker.spec
 ```
 
-완성된 프로그램은 `dist\PDFBookMaker.exe`에 생성됩니다. 맑은 고딕 폰트 파일은 실행파일에 함께 포함됩니다.
+빌드가 완료되면 실행파일은 `dist\PDFBookMaker\PDFBookMaker.exe`에 생성됩니다.
+
+PDF 출력에 필요한 맑은 고딕 폰트 파일은 실행파일에 함께 포함됩니다.
 
 ## 프로젝트 구조
 
@@ -119,22 +126,27 @@ PDF-Book-Maker/
 │  │  │  └─ 표지 미리보기
 │  │  ├─ page_number_preview_widget.py
 │  │  │  └─ 페이지 번호 미리보기
-│  │  ├─ position_selector.py
-│  │  │  └─ 페이지 번호 위치 선택
-│  │  └─ check_box.py
-│  │     └─ 사용자 정의 체크박스
+│  │  └─ position_selector.py
+│  │     └─ 페이지 번호 위치 선택
 │  │
 │  └─ utils/
-│     └─ page_number_helper.py
-│        └─ 페이지 번호 위치 계산
+│     ├─ page_number_helper.py
+│     │  └─ 페이지 번호 위치 계산
+│     └─ pdf_title_reader.py
+│        └─ PDF 제목 정보 읽기
 │
 ├─ assets/
 │  └─ fonts/
 │     └─ malgun.ttf
 │        └─ PDF 출력용 한글 글꼴
 │
+├─ docs/
+│  └─ images/
+│     └─ README용 프로그램 화면 이미지
+│
 ├─ tests/
-│  └─ 자동 테스트
+│  └─ test_file_merge.py
+│     └─ PDF 병합 기능 자동 테스트
 │
 ├─ requirements.txt
 │  └─ 실행에 필요한 Python 패키지
@@ -142,23 +154,24 @@ PDF-Book-Maker/
 ├─ requirements-dev.txt
 │  └─ 개발 및 배포용 패키지
 │
-├─ pdf_book_maker.spec
+├─ PDFBookMaker.spec
 │  └─ PyInstaller 실행파일 빌드 설정
 │
 ├─ README.md
 │  └─ 프로젝트 소개 및 사용 방법
 │
+├─ USER_MANUAL.md
+│  └─ 사용자 매뉴얼
+│
 ├─ CHANGELOG.md
-│  └─ 버전별 변경사항
+│  └─ 버전별 주요 변경사항
 │
-├─ TODO.md
-│  └─ 향후 작업 목록
-│
-├─ BUGS.md
-│  └─ 발견된 오류 및 수정 기록
+├─ LICENSE
+│  └─ MIT License
 │
 └─ DEVLOG.md
    └─ 개발 진행 기록
+```
 
 ## 현재 제한사항
 
@@ -168,9 +181,9 @@ PDF-Book-Maker/
 
 ## 릴리스 전 확인사항
 
-- [ ] 실제 Windows 환경에서 대용량 PDF 병합 확인
-- [ ] Windows 실행파일(EXE) 제작
+- [x] 실제 Windows 환경에서 대용량 PDF 병합 확인
+- [x] Windows 실행파일(EXE) 제작
 - [ ] 깨끗한 Windows 환경에서 실행파일 실행 확인
-- [ ] 사용자 매뉴얼 작성
-- [ ] 프로그램 스크린샷 추가
-- [ ] 프로젝트 라이선스 결정 및 `LICENSE` 파일 추가
+- [x] 사용자 매뉴얼 작성
+- [x] 프로그램 스크린샷 추가
+- [x] 프로젝트 라이선스 결정 및 `LICENSE` 파일 추가
