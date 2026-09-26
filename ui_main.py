@@ -2,6 +2,7 @@ import os
 from ui.utils.pdf_title_reader import extract_pdf_info
 from file_merge import merge_pdf
 from ui.settings_dialog import SettingsDialog
+from ui.widgets.check_box import CheckBox
 from PySide6.QtCore import Qt, QSettings
 from PySide6.QtWidgets import QAbstractItemView
 from pathlib import Path
@@ -9,6 +10,7 @@ from PySide6.QtWidgets import (
     QApplication,
     QWidget,
     QLabel,
+    QComboBox,
     QPushButton,
     QLineEdit,
     QTextEdit,
@@ -86,7 +88,7 @@ class MainWindow(QWidget):
 
         header_left = QVBoxLayout()
         header_left.setSpacing(2)
-        header_left.addWidget(header)git self.statusTip
+        header_left.addWidget(header)
         header_left.addWidget(sub_title)
 
         header_layout = QHBoxLayout()
@@ -97,9 +99,39 @@ class MainWindow(QWidget):
         header_frame = QFrame()
         header_frame.setLayout(header_layout)
 
+
+        # 목차 설정
+        self.use_toc_check = CheckBox(
+            "목차 생성",
+            checked=True
+        )
+
+        self.use_toc_check.setFixedWidth(110)
+
+        self.blank_page_combo = QComboBox()
+        self.blank_page_combo.addItems([
+            "없음",
+            "목차 앞",
+            "목차 뒤"
+        ])
+
+        self.use_toc_check.toggled.connect(
+            self.blank_page_combo.setEnabled
+        )
+
+        self.use_toc_check.toggled.connect(
+            self.save_toc_settings
+        )
+
+        self.blank_page_combo.currentTextChanged.connect(
+            self.save_toc_settings
+        )
+
+        self.load_toc_settings()
+
         # ==========================
         # 입력 파일
-        # ==========================
+        # ==========================        
 
         input_label = QLabel("입력 파일")
 
@@ -111,13 +143,13 @@ class MainWindow(QWidget):
         self.input_button.clicked.connect(self.select_input_files)
         self.input_button.setFixedSize(80, 32)
 
-        self.section_button = QPushButton("목차 추가")
+        self.section_button = QPushButton("북마크 추가")
         self.section_button.clicked.connect(self.add_section_row)
-        self.section_button.setFixedSize(80, 32)
+        self.section_button.setFixedSize(90, 32)
 
-        self.section_delete_button = QPushButton("목차 삭제")
+        self.section_delete_button = QPushButton("북마크 삭제")
         self.section_delete_button.clicked.connect(self.delete_section_row)
-        self.section_delete_button.setFixedSize(80, 32)
+        self.section_delete_button.setFixedSize(90, 32)
 
         input_layout = QHBoxLayout()
 
@@ -287,9 +319,26 @@ class MainWindow(QWidget):
 
         left_group = QGroupBox("📄 PDF 목록")
         left_layout = QVBoxLayout()
-        left_layout.addWidget(input_label)
+
+        # 목차 설정
+        top_layout = QHBoxLayout()
+
+        top_layout.addWidget(input_label)
+        top_layout.addStretch()
+
+        top_layout.addWidget(self.use_toc_check)
+
+        blank_label = QLabel("빈 페이지")
+
+        top_layout.addWidget(blank_label)
+        top_layout.addSpacing(20)
+        top_layout.addWidget(self.blank_page_combo)
+
+        left_layout.addLayout(top_layout)
+
         left_layout.addLayout(input_layout)
         left_layout.addWidget(self.table)
+
         left_group.setLayout(left_layout)
 
 
@@ -708,6 +757,37 @@ class MainWindow(QWidget):
         self.log.append(message)
         QApplication.processEvents()
 
+    def load_toc_settings(self):
+
+        use_toc = self.settings.value(
+            "toc/use_toc",
+            True,
+            type=bool
+        )
+
+        blank_page = self.settings.value(
+            "toc/blank_page",
+            "없음",
+            type=str
+        )
+
+        self.use_toc_check.setChecked(use_toc)
+        self.blank_page_combo.setCurrentText(blank_page)
+
+        self.blank_page_combo.setEnabled(use_toc)
+
+    def save_toc_settings(self, *args):
+
+        self.settings.setValue(
+            "toc/use_toc",
+            self.use_toc_check.isChecked()
+        )
+
+        self.settings.setValue(
+            "toc/blank_page",
+            self.blank_page_combo.currentText()
+        )
+
     def make_book(self):
 
         # 파일을 선택하지 않은 경우
@@ -816,6 +896,11 @@ class MainWindow(QWidget):
 
         cover_settings = self.settings_dialog.get_cover_settings()
 
+        toc_settings = {
+            "use_toc": self.use_toc_check.isChecked(),
+            "blank_page": self.blank_page_combo.currentText()
+        }
+
         try:
             merge_pdf(
                 toc_items,
@@ -823,6 +908,7 @@ class MainWindow(QWidget):
                 output_file,
                 page_number_settings,
                 cover_settings,
+                toc_settings,
                 progress_callback=self.update_progress,
                 log_callback=self.append_merge_log
             )

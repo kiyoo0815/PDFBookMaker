@@ -214,6 +214,156 @@ class FileMergeTest(unittest.TestCase):
                 result[3].get_text()
             )
 
+    def test_toc_disabled(self):
+        """목차를 생성하지 않을 때 본문과 북마크 위치를 확인한다."""
+
+        first_pdf = self.create_pdf(
+            "first.pdf",
+            "FIRST"
+        )
+
+        second_pdf = self.create_pdf(
+            "second.pdf",
+            "SECOND"
+        )
+
+        pdf_list = [
+            str(first_pdf),
+            str(second_pdf),
+        ]
+
+        titles = [
+            "First",
+            "Second",
+        ]
+
+        toc_items = self.make_toc_items(
+            pdf_list,
+            titles
+        )
+
+        output_path = self.test_folder / "no_toc.pdf"
+
+        toc_settings = {
+            "use_toc": False,
+            "blank_page": "없음"
+        }
+
+        merge_pdf(
+            toc_items,
+            "목차 없음 테스트",
+            str(output_path),
+            self.page_number_settings,
+            self.cover_settings,
+            toc_settings,
+        )
+
+        with fitz.open(output_path) as result:
+
+            # 표지 1 + 본문 2 = 3페이지
+            self.assertEqual(
+                result.page_count,
+                3
+            )
+
+            # 목차가 없으므로 표지 바로 다음부터 본문
+            self.assertIn(
+                "FIRST",
+                result[1].get_text()
+            )
+
+            self.assertIn(
+                "SECOND",
+                result[2].get_text()
+            )
+
+            # PDF 북마크는 그대로 생성되어야 한다.
+            self.assertEqual(
+                len(result.get_toc()),
+                2
+            )
+
+            # 첫 번째 본문은 PDF 전체의 2페이지
+            self.assertEqual(
+                result.get_toc()[0][2],
+                2
+            )
+
+    def test_blank_page_before_and_after_toc(self):
+        """목차 앞/뒤 빈 페이지와 북마크 위치를 확인한다."""
+
+        input_pdf = self.create_pdf(
+            "input.pdf",
+            "SOURCE"
+        )
+
+        toc_items = self.make_toc_items(
+            [str(input_pdf)],
+            ["Chapter 1"]
+        )
+
+        for blank_page in ["목차 앞", "목차 뒤"]:
+
+            output_path = self.test_folder / f"{blank_page}.pdf"
+
+            toc_settings = {
+                "use_toc": True,
+                "blank_page": blank_page
+            }
+
+            merge_pdf(
+                toc_items,
+                "빈 페이지 테스트",
+                str(output_path),
+                self.page_number_settings,
+                self.cover_settings,
+                toc_settings,
+            )
+
+            with fitz.open(output_path) as result:
+
+                # 표지 1 + 빈 페이지 1 + 목차 1 + 본문 1 = 4페이지
+                self.assertEqual(
+                    result.page_count,
+                    4
+                )
+
+                # 빈 페이지 위치 확인
+                if blank_page == "목차 앞":
+                    self.assertEqual(
+                        result[1].get_text().strip(),
+                        ""
+                    )
+
+                    self.assertIn(
+                        "목 차",
+                        result[2].get_text()
+                    )
+
+                else:
+                    self.assertIn(
+                        "목 차",
+                        result[1].get_text()
+                    )
+
+                    self.assertEqual(
+                        result[2].get_text().strip(),
+                        ""
+                    )
+
+                # 두 경우 모두 본문은 네 번째 페이지
+                self.assertIn(
+                    "SOURCE",
+                    result[3].get_text()
+                )
+
+                # 북마크도 네 번째 페이지를 가리켜야 한다.
+                self.assertEqual(
+                    result.get_toc()[0][2],
+                    4
+                )
+    
+
     def test_missing_input_file(self):
         """없는 입력 파일을 알기 쉬운 오류로 안내하는지 확인한다."""
 

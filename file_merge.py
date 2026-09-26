@@ -615,9 +615,17 @@ def merge_pdf(
     output_file,
     page_number_settings,
     cover_settings,
+    toc_settings=None,
     progress_callback=None,
     log_callback=None
 ):
+
+    if toc_settings is None:
+        toc_settings = {
+            "use_toc": True,
+            "blank_page": "없음"
+        }
+    
     """표지, 목차, 본문과 북마크를 하나의 PDF로 만든다."""
 
     report_log(log_callback, "PDF 병합을 시작합니다.")
@@ -660,20 +668,45 @@ def merge_pdf(
             cover_settings
         )
 
-        # 제목 개수에 맞춰 목차 페이지를 만든다.
-        toc_page_count = create_toc_pages(
-            merged,
-            toc_items,
-            body_start_pages,
-            page_number_settings["start_number"]
-        )
+        # 목차 생성 여부에 따라 목차 페이지를 만든다.
+        blank_page_count = 0
+
+        if toc_settings["use_toc"]:
+
+            # 목차 앞에 빈 페이지 추가
+            if toc_settings["blank_page"] == "목차 앞":
+                merged.new_page(
+                    width=PAGE_WIDTH,
+                    height=PAGE_HEIGHT
+                )
+                blank_page_count = 1
+
+            # 목차 생성
+            toc_page_count = create_toc_pages(
+                merged,
+                toc_items,
+                body_start_pages,
+                page_number_settings["start_number"]
+            )
+
+            # 목차 뒤에 빈 페이지 추가
+            if toc_settings["blank_page"] == "목차 뒤":
+                merged.new_page(
+                    width=PAGE_WIDTH,
+                    height=PAGE_HEIGHT
+                )
+                blank_page_count = 1
+
+        else:
+            toc_page_count = 0
+
         report_log(
             log_callback,
             f"목차 {toc_page_count}페이지를 생성했습니다."
         )
         report_progress(progress_callback, 20)
 
-        first_body_page_index = 1 + toc_page_count
+        first_body_page_index = 1 + toc_page_count + blank_page_count
 
         append_pdf_files(
             merged,
