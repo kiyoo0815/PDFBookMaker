@@ -4,6 +4,15 @@
 
 현재 버전은 `v1.0`입니다.
 
+## 다운로드
+
+**[PDF Book Maker 최신 버전 다운로드](https://github.com/kiyoo0815/PDFBookMaker/releases/latest)**
+
+Windows 10/11에서 사용할 수 있으며 Python 설치는 필요하지 않습니다.
+
+다운로드한 `PDFBookMaker-v1.0-Windows.zip`의 압축을 풀고
+`PDFBookMaker.exe`를 실행하면 됩니다.
+
 ## 주요 기능
 
 - 여러 PDF를 원하는 순서로 병합
