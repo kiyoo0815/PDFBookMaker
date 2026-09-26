@@ -372,4 +372,4 @@ PDF Book Maker는 여러 PDF 파일을 원하는 순서로 병합하고, 표지�
 ---
 
 PDF Book Maker  
-v1.0 RC
+v1.0
